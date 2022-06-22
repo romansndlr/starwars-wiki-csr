@@ -1,18 +1,17 @@
-import { RefreshIcon } from "@heroicons/react/solid";
 import React from "react";
 import { Outlet } from "react-router-dom";
 import CategoriesList from "../components/categories-list";
+import Spinner from "../components/spinner";
 import starWarsLogo from "../star-wars-logo.png";
 
 export default function Root() {
+  const [initialRender, setInitialRender] = React.useState(true);
+
   return (
     <React.Suspense
-      fallback={
-        <div className="flex flex-col items-center justify-center h-screen">
-          <RefreshIcon className="h-20 text-gray-800 animate-spin" />
-        </div>
-      }
+      fallback={<Spinner containerSizeClass="w-screen h-screen" />}
     >
+      <NewComponent afterRender={() => setInitialRender(false)} />
       <div className="relative flex">
         <div className="flex flex-col flex-1 h-screen max-w-xs min-h-0 bg-gray-800">
           <div className="flex flex-col flex-1 pt-5 pb-4 overflow-y-auto">
@@ -27,8 +26,24 @@ export default function Root() {
             </nav>
           </div>
         </div>
-        <Outlet />
+        <div className="flex flex-1 h-screen">
+          {initialRender ? (
+            <Outlet />
+          ) : (
+            <React.Suspense fallback={<Spinner />}>
+              <Outlet />
+            </React.Suspense>
+          )}
+        </div>
       </div>
     </React.Suspense>
   );
+}
+
+function NewComponent({ afterRender }) {
+  React.useEffect(() => {
+    afterRender();
+  }, [afterRender]);
+
+  return null;
 }
