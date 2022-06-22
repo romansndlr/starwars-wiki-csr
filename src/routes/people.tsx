@@ -5,7 +5,25 @@ import dayjs from "dayjs";
 import { last, compact } from "lodash";
 import { useQuery } from "react-query";
 import { NavLink, Outlet } from "react-router-dom";
-import sleep from "../utils/sleep";
+
+interface Person {
+  birth_year: string;
+  created: string;
+  edited: string;
+  eye_color: string;
+  films: string[];
+  gender: string;
+  hair_color: string;
+  height: string;
+  homeworld: string;
+  mass: string;
+  name: string;
+  skin_color: string;
+  species: string[];
+  starships: string[];
+  url: string;
+  vehicles: string[];
+}
 
 async function getPeople() {
   const { data } = await axios.get("/people");
@@ -28,7 +46,7 @@ export default function People() {
           role="list"
           className="relative z-0 flex-1 min-h-0 overflow-y-auto border-b border-gray-200 divide-y divide-gray-200"
         >
-          {data.results.map((person) => {
+          {data.results.map((person: Person) => {
             const id = last(compact(person.url.split("/"))) as string;
 
             return (

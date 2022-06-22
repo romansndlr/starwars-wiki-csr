@@ -5,7 +5,23 @@ import dayjs from "dayjs";
 import { last, compact } from "lodash";
 import { useQuery } from "react-query";
 import { NavLink, Outlet } from "react-router-dom";
-import sleep from "../utils/sleep";
+
+interface Planet {
+  climate: string;
+  created: string;
+  diameter: string;
+  edited: string;
+  films: string[];
+  gravity: string;
+  name: string;
+  orbital_period: string;
+  population: string;
+  residents: string[];
+  rotation_period: string;
+  surface_water: string;
+  terrain: string;
+  url: string;
+}
 
 async function getPlanets() {
   const { data } = await axios.get("/planets");
@@ -30,7 +46,7 @@ export default function Planets() {
           role="list"
           className="relative z-0 flex-1 min-h-0 overflow-y-auto border-b border-gray-200 divide-y divide-gray-200"
         >
-          {data.results.map((planet) => {
+          {data.results.map((planet: Planet) => {
             const id = last(compact(planet.url.split("/"))) as string;
 
             return (

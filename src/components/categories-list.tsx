@@ -9,11 +9,14 @@ import {
 import axios from "axios";
 import clsx from "clsx";
 import { capitalize } from "lodash";
+import React from "react";
 import { useQuery } from "react-query";
 import { useLocation, NavLink } from "react-router-dom";
-import sleep from "../utils/sleep";
 
-const icons = {
+const icons: Record<
+  string,
+  (props: React.SVGProps<SVGSVGElement>) => JSX.Element
+> = {
   people: UsersIcon,
   planets: GlobeIcon,
   films: FilmIcon,
@@ -52,7 +55,7 @@ export default function CategoriesList() {
           >
             <Icon
               className={clsx(
-                location === category
+                location.pathname === category
                   ? "text-gray-300"
                   : "text-gray-400 group-hover:text-gray-300",
                 "mr-3 flex-shrink-0 h-6 w-6"

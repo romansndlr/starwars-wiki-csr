@@ -40,7 +40,7 @@ export default function Root() {
   );
 }
 
-function NewComponent({ afterRender }) {
+function NewComponent({ afterRender }: { afterRender: () => void }) {
   React.useEffect(() => {
     afterRender();
   }, [afterRender]);
