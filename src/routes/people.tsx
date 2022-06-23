@@ -3,8 +3,7 @@ import axios from "axios";
 import clsx from "clsx";
 import dayjs from "dayjs";
 import { last, compact } from "lodash";
-import { useQuery } from "react-query";
-import { NavLink, Outlet } from "react-router-dom";
+import { json, NavLink, Outlet, useLoaderData } from "react-router-dom";
 
 interface Person {
   birth_year: string;
@@ -25,14 +24,16 @@ interface Person {
   vehicles: string[];
 }
 
-async function getPeople() {
+export async function loader() {
   const { data } = await axios.get("/people");
 
-  return data;
+  return json({
+    people: data,
+  });
 }
 
 export default function People() {
-  const { data } = useQuery("people", getPeople);
+  const { people } = useLoaderData();
 
   return (
     <>
@@ -46,7 +47,7 @@ export default function People() {
           role="list"
           className="relative z-0 flex-1 min-h-0 overflow-y-auto border-b border-gray-200 divide-y divide-gray-200"
         >
-          {data.results.map((person: Person) => {
+          {people.results.map((person: Person) => {
             const id = last(compact(person.url.split("/"))) as string;
 
             return (
