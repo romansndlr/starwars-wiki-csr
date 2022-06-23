@@ -3,8 +3,13 @@ import axios from "axios";
 import clsx from "clsx";
 import dayjs from "dayjs";
 import { last, compact } from "lodash";
-import { useQuery } from "react-query";
-import { NavLink, Outlet } from "react-router-dom";
+import {
+  json,
+  LoaderFunction,
+  NavLink,
+  Outlet,
+  useLoaderData,
+} from "react-router-dom";
 
 interface Planet {
   climate: string;
@@ -23,14 +28,14 @@ interface Planet {
   url: string;
 }
 
-async function getPlanets() {
+export const loader: LoaderFunction = async () => {
   const { data } = await axios.get("/planets");
 
-  return data;
-}
+  return json({ planets: data });
+};
 
 export default function Planets() {
-  const { data } = useQuery("planets", getPlanets);
+  const { planets } = useLoaderData();
 
   return (
     <>
@@ -46,7 +51,7 @@ export default function Planets() {
           role="list"
           className="relative z-0 flex-1 min-h-0 overflow-y-auto border-b border-gray-200 divide-y divide-gray-200"
         >
-          {data.results.map((planet: Planet) => {
+          {planets.results.map((planet: Planet) => {
             const id = last(compact(planet.url.split("/"))) as string;
 
             return (

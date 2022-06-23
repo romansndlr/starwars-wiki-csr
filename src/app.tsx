@@ -1,38 +1,37 @@
-import React from "react";
-import { Route, Routes } from "react-router-dom";
-import Spinner from "./components/spinner";
-
-const People = React.lazy(() => import("./routes/people"));
-const Planets = React.lazy(() => import("./routes/planets"));
-const Person = React.lazy(() => import("./routes/person"));
-const Planet = React.lazy(() => import("./routes/planet"));
-const Root = React.lazy(() => import("./routes/root"));
+import { Route, DataBrowserRouter } from "react-router-dom";
+import * as Root from "./routes/root";
+import * as People from "./routes/people";
+import * as Planets from "./routes/planets";
+import * as Person from "./routes/person";
+import * as Planet from "./routes/planet";
 
 export default function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Root />}>
-        <Route path="people" element={<People />}>
+    <DataBrowserRouter>
+      <Route path="/" element={<Root.default />} loader={Root.loader}>
+        <Route
+          path="people"
+          element={<People.default />}
+          loader={People.loader}
+        >
           <Route
             path=":personId"
-            element={
-              <React.Suspense fallback={<Spinner />}>
-                <Person />
-              </React.Suspense>
-            }
+            element={<Person.default />}
+            loader={Person.loader}
           />
         </Route>
-        <Route path="planets" element={<Planets />}>
+        <Route
+          path="planets"
+          element={<Planets.default />}
+          loader={Planets.loader}
+        >
           <Route
             path=":planetId"
-            element={
-              <React.Suspense fallback={<Spinner />}>
-                <Planet />
-              </React.Suspense>
-            }
+            element={<Planet.default />}
+            loader={Planet.loader}
           />
         </Route>
       </Route>
-    </Routes>
+    </DataBrowserRouter>
   );
 }
